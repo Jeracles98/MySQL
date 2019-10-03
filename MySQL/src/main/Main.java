@@ -17,7 +17,7 @@ public class Main {
 			ResultSet resultado = sentencia.executeQuery(sql);
 			
 			while (resultado.next()) {
-			    System.out.printf("%s, %s, %s, %f, %d  %n", 
+			    System.out.printf("%s, %s, %s , %f, %d  %n", 
 			    		resultado.getString(1), 
 			    		resultado.getString(2), 
 			    		resultado.getDate(3),
