@@ -3,9 +3,12 @@ package src;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
+
+import dao.AlumnosDAO;
 
 public class programa {
 
@@ -31,23 +34,18 @@ public class programa {
 			switch(opcion){
 
 			case 1:
+				ArrayList<Alumno> alumnos = AlumnosDAO.obtenerTodos();
 				System.out.println("Opción MostrarDatos");
 				System.out.println("COLUMNAS TABLA DEPARTAMENTOS:");
 				System.out.println("===================================");
-				ResultSet columnas=null;
-				Object dbmd;
-				//columnas = dbmd.getColumns(null, "ejemplo", "departamentos", null);
-				while (columnas.next()) {			   
-					String nombCol = columnas.getString("COLUMN_NAME"); 
-					String tipoCol = columnas.getString("TYPE_NAME");   
-					String tamCol = columnas.getString("COLUMN_SIZE");  
-					String nula  = columnas.getString("IS_NULLABLE");   
-
-					System.out.printf("Columna: %s, Tipo: %s, Tamaño: %s, ¿Puede ser Nula:? %s %n", nombCol, tipoCol, tamCol, nula);
+				for (int i = 0; i < alumnos.size(); i++) {
+					System.out.printf("%s",
+							alumnos.get(i).getNombre());
 				}
+				
 				break;
 			case 2:
-				System.out.println("Opción BuscarAlumno");
+				System.out.println("Opción Buscar Alumno");
 				String identificador;
 				identificador = teclado.next();
 				//construimos la orden SELECT
@@ -100,7 +98,7 @@ public class programa {
 				finalizar=true;
 				break;
 			default:
-				System.out.println("Opción ");
+				
 			}
 		}
 	}
