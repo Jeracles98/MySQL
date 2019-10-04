@@ -8,7 +8,7 @@ public class Conector {
 	
 	private static Connection conexion;
 	
-	public static void conectar() {
+	private static void conectar() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conexion = DriverManager.getConnection("jdbc:mysql://172.20.254.161/aad_14", "aad_14", "1234");
@@ -17,15 +17,24 @@ public class Conector {
 		}
 	}
 	
+	/**
+	 * La primera vez que se ejecuta inicia la conexion
+	 * @return la conexion a la base de datos
+	 */
 	public static Connection getConexion() {
+		if (conexion == null) {
+			conectar();
+		}
 		return conexion;
 	}
 	
 	public static void cerrarConexion() {
-		try {
-			conexion.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (conexion != null) {
+			try {
+				conexion.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
