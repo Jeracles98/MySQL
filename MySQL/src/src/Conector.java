@@ -19,6 +19,7 @@ public class Conector {
 	
 	/**
 	 * La primera vez que se ejecuta inicia la conexion
+	 * Patron Singleton
 	 * @return la conexion a la base de datos
 	 */
 	public static Connection getConexion() {
@@ -37,9 +38,4 @@ public class Conector {
 			}
 		}
 	}
-	
-//	// Preparamos la consulta
-//		Statement sentencia = conexion.createStatement();
-//	      String sql = "SELECT * FROM prueba1";
-//		ResultSet resul = sentencia.executeQuery(sql);
 }//class

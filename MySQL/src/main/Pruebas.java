@@ -9,7 +9,7 @@ import dao.AlumnosDAO;
 import src.Alumno;
 import src.Conector;
 
-public class Main {
+public class Pruebas {
 
 	public static void main(String[] args) {
 //		Conector.conectar();
@@ -30,11 +30,12 @@ public class Main {
 //			e.printStackTrace();
 //		}
 //		Conector.cerrarConexion();
-		ArrayList<Alumno> alumnos = AlumnosDAO.obtenerTodos();
+//		ArrayList<Alumno> alumnos = AlumnosDAO.obtenerTodos();
 //		alumnos = AlumnosDAO.obtenerTodos();
-		for (int i = 0; i < alumnos.size(); i++) {
-			System.out.println(alumnos.get(i).getNombre() );
-		}
+//		for (int i = 0; i < alumnos.size(); i++) {
+//			System.out.println(alumnos.get(i).getNombre() );
+//		}
+		System.out.println(AlumnosDAO.getAlumnoId("A01").toString());
 		Conector.cerrarConexion();
 	}
 
