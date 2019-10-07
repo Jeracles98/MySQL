@@ -1,16 +1,12 @@
 package src;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
 
-import com.mysql.jdbc.PreparedStatement.ParseInfo;
 
 import dao.AlumnosDAO;
 
@@ -19,6 +15,7 @@ public class programa {
 
 	public static void main(String[] args) throws SQLException {
 
+		@SuppressWarnings("resource")
 		Scanner teclado = new Scanner(System.in);
 		boolean finalizar = false;
 		int opcion;
@@ -35,7 +32,6 @@ public class programa {
 				System.out.println("Elige una opción");
 
 				opcion = teclado.nextInt();
-				Object query;
 				switch(opcion){
 
 				/**
@@ -44,40 +40,45 @@ public class programa {
 				 * dato - dato - dato etc
 				 */
 				case 1:
-					ArrayList<Alumno> alumnos = AlumnosDAO.obtenerTodos();
+					ArrayList<Alumno> alumnosC1 = AlumnosDAO.obtenerTodos();
 					System.out.println("Opción MostrarDatos\n");
 					System.out.println("COLUMNAS TABLA ALUMNOS:");
 					System.out.println("===================================");
-					for (int i = 0; i < alumnos.size(); i++) {
-						System.out.println(alumnos.get(i).toString());
+					for (int i = 0; i < alumnosC1.size(); i++) {
+						System.out.println(alumnosC1.get(i).toString());
 					}
 					System.out.println("\n");
 					break;
 				case 2:
 					System.out.println("Opción Buscar Alumno");
-					System.out.print("Introduce el identificador del alumno a buscar: ");
-					String identificador = teclado.next().toUpperCase();
-					if ( !identificador.equals("FIN")) {
+					String identificador = "";
+					while (!identificador.equals("FIN")) {
+						System.out.print("Introduce el identificador del alumno a buscar\nO introduce FIN para acabar");
+						identificador = teclado.next().toUpperCase();
 						Alumno alumno = AlumnosDAO.getAlumnoId(identificador);
 						System.out.print("\n"); //Deja un poco de espacio
-						if (alumno != null) {
+						if (alumno != null || identificador != "FIN") {
 							System.out.println(alumno.toString());
-						} else {
+						} else if (identificador != "FIN"){
 							System.out.println("El alumno con id " + identificador + " no existe.");
 						}
 						//Deja un poco de espacio entre el resultado y la siguiente ejecución
 						System.out.println("\n");
-					} else {
-						break;
 					}
+					break;
 				case 3:
 					System.out.println("Opción AñadirAlumno");
 					Alumno alumnoAux = new Alumno();
 					GregorianCalendar fechaAux = new GregorianCalendar();
 					int year,month,day;
 					System.out.print("Dime la ID del usuario a guardar: ");
-					alumnoAux.setIdentificador(teclado.next());
-					System.out.print("Dime el Nombre del usuario a guardar: ");
+					alumnoAux.setIdentificador(teclado.next().toUpperCase());
+					/*Debido a que usamos la clase Scanner no podemos poner espacios a no ser
+					 * que pidamos por teclado el Nombre y los apellidos y los juntemos todos
+					 * en un String antes de enciarlos a la base de datos, pero para evitar
+					 * pedir demasiados datos lo dejamos así, ya que es un problema que
+					   al usar swing se solucionará	*/
+					System.out.print("Dime el Nombre del usuario a guardar (Sin espacios): "); 
 					alumnoAux.setNombre(teclado.next());
 					System.out.print("Dime el dia de nacimiento del usuario a guardar: ");
 					day = Integer.parseInt(teclado.next());
@@ -91,33 +92,38 @@ public class programa {
 					alumnoAux.setCalificacion(Integer.parseInt(teclado.next()));
 					System.out.print("Dime el CI del usuario a guardar: ");
 					alumnoAux.setCi(Integer.parseInt(teclado.next()));
+					AlumnosDAO.nuevoAlumno(alumnoAux);
+					System.out.println("\n");
 					break;
 				case 4:
 					System.out.println("Opción BorrarAlumno");
 					System.out.print("Dime la ID del usuario a borrar");
-					identificador = teclado.next();
+					identificador = teclado.next().toUpperCase();
 					if (identificador != null) {
 						AlumnosDAO.borrarAlumno(identificador);
 					}
-				break;
+					System.out.println("\n");
+					break;
 				case 5:
 					System.out.println("Opción MostrarAlumnosIQ");
+					System.out.println("Introduce el CI para obtener\nlos alumnos con un CI mayor");
+					int ci = Integer.parseInt(teclado.next());
+					ArrayList<Alumno> alumnosC5;
 					try
 					{
-						//construimos la orden SELECT
-						//sql= "SELECT * FROM alumnos WHERE coeficiente_de_inteligencia > "+ coeficiente_de_inteligencia +"ORDER BY 1";
-
-						// Preparamos la sentencia
-						/*if (valor > coeficiente_de_inteligencia){
-					PreparedStatement sentencia = conexion.prepareStatement(sql);
-					sentencia.setInt(1,Integer.parseInt((String) coeficiente_de_inteligencia));
-					ResultSet rs = sentencia.executeQuery();  
-					System.out.println(sql);
-					rs.close();// liberar recursos
-					sentencia.close();
-					}*/
-
-					} catch (Exception e) {e.printStackTrace();}
+						alumnosC5 = AlumnosDAO.getAlumnoCi(ci);
+						if (alumnosC5.size() != 0) {
+							System.out.println(alumnosC5.size());
+							for (int i = 0; i < alumnosC5.size(); i++) {
+								System.out.println(alumnosC5.get(i).toString());
+							}
+						} else {
+							System.out.println("No hay alumnos con tanto CI");
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					System.out.println("\n");
 					break;
 				case 6:
 					System.out.println("Fin del Programa :D");

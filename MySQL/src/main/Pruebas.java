@@ -1,12 +1,7 @@
 package main;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 
 import dao.AlumnosDAO;
-import src.Alumno;
 import src.Conector;
 
 public class Pruebas {
